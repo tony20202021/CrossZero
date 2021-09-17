@@ -1,0 +1,469 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'CrossZero 7.0'
+  ClientHeight = 638
+  ClientWidth = 1806
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnCloseQuery = FormCloseQuery
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+  object Panel_Left: TPanel
+    Align = Left
+    Size.Width = 150.000000000000000000
+    Size.Height = 638.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object Label1: TLabel
+      Align = Top
+      StyledSettings = [Family, Style, FontColor]
+      Size.Width = 150.000000000000000000
+      Size.Height = 97.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 64.000000000000000000
+      TextSettings.HorzAlign = Center
+      Text = 'X'
+      TabOrder = 2
+    end
+    object Label_Player_Left: TLabel
+      Align = Top
+      StyledSettings = [Family, Style, FontColor]
+      Position.Y = 97.000000000000000000
+      Size.Width = 150.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 16.000000000000000000
+      TextSettings.HorzAlign = Center
+      Text = 'Player_Left'
+      TabOrder = 1
+    end
+  end
+  object Panel_Right: TPanel
+    Align = Left
+    Position.X = 545.000000000000000000
+    Size.Width = 150.000000000000000000
+    Size.Height = 638.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    object Label2: TLabel
+      Align = Top
+      StyledSettings = [Family, Style, FontColor]
+      Size.Width = 150.000000000000000000
+      Size.Height = 97.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 64.000000000000000000
+      TextSettings.HorzAlign = Center
+      Text = '0'
+      TabOrder = 0
+    end
+    object Label_Player_Right: TLabel
+      Align = Top
+      StyledSettings = [Family, Style, FontColor]
+      Position.Y = 97.000000000000000000
+      Size.Width = 150.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 16.000000000000000000
+      TextSettings.HorzAlign = Center
+      Text = 'Player_Right'
+      TabOrder = 1
+    end
+  end
+  object Panel_Center: TPanel
+    Align = Left
+    Position.X = 150.000000000000000000
+    Size.Width = 395.000000000000000000
+    Size.Height = 638.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object Button_Back: TButton
+      Enabled = False
+      StyledSettings = [Family, FontColor]
+      Position.X = 152.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 40.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = '<'
+      TextSettings.Font.Size = 24.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+    end
+    object Button_Forward: TButton
+      Enabled = False
+      StyledSettings = [Family, FontColor]
+      Position.X = 192.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 40.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = '>'
+      TextSettings.Font.Size = 24.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      OnClick = Button_ForwardClick
+    end
+    object Button_Start: TButton
+      StyledSettings = [Family, FontColor]
+      Position.X = 16.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      Text = 'Start'
+      TextSettings.Font.Size = 24.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      OnClick = Button_StartClick
+    end
+    object GridLayout1: TGridLayout
+      Align = Client
+      ItemHeight = 64.000000000000000000
+      ItemWidth = 64.000000000000000000
+      Orientation = Horizontal
+      Margins.Left = 100.000000000000000000
+      Margins.Top = 100.000000000000000000
+      Margins.Right = 100.000000000000000000
+      Margins.Bottom = 100.000000000000000000
+      Size.Width = 195.000000000000000000
+      Size.Height = 438.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      object Panel1: TPanel
+        Size.Width = 64.000000000000000000
+        Size.Height = 64.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 9
+        object Label11: TLabel
+          Align = Client
+          StyledSettings = [Family, Style]
+          Size.Width = 64.000000000000000000
+          Size.Height = 64.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 64.000000000000000000
+          TextSettings.HorzAlign = Center
+          Text = '0'
+          TabOrder = 0
+        end
+      end
+      object Panel2: TPanel
+        Position.X = 64.000000000000000000
+        Size.Width = 64.000000000000000000
+        Size.Height = 64.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 8
+        object Label12: TLabel
+          Align = Client
+          StyledSettings = [Family, Style]
+          Size.Width = 64.000000000000000000
+          Size.Height = 64.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 64.000000000000000000
+          TextSettings.HorzAlign = Center
+          Text = 'X'
+          TabOrder = 0
+        end
+      end
+      object Panel3: TPanel
+        Position.X = 128.000000000000000000
+        Size.Width = 64.000000000000000000
+        Size.Height = 64.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 7
+        object Label13: TLabel
+          Align = Client
+          StyledSettings = [Family, Style]
+          Size.Width = 64.000000000000000000
+          Size.Height = 64.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 64.000000000000000000
+          TextSettings.HorzAlign = Center
+          Text = '0'
+          TabOrder = 0
+        end
+      end
+      object Panel4: TPanel
+        Position.Y = 64.000000000000000000
+        Size.Width = 64.000000000000000000
+        Size.Height = 64.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 6
+        object Label21: TLabel
+          Align = Client
+          StyledSettings = [Family, Style]
+          Size.Width = 64.000000000000000000
+          Size.Height = 64.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 64.000000000000000000
+          TextSettings.HorzAlign = Center
+          Text = '0'
+          TabOrder = 0
+        end
+      end
+      object Panel5: TPanel
+        Position.X = 64.000000000000000000
+        Position.Y = 64.000000000000000000
+        Size.Width = 64.000000000000000000
+        Size.Height = 64.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        object Label22: TLabel
+          Align = Client
+          StyledSettings = [Family, Style]
+          Size.Width = 64.000000000000000000
+          Size.Height = 64.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 64.000000000000000000
+          TextSettings.HorzAlign = Center
+          Text = '0'
+          TabOrder = 0
+        end
+      end
+      object Panel6: TPanel
+        Position.X = 128.000000000000000000
+        Position.Y = 64.000000000000000000
+        Size.Width = 64.000000000000000000
+        Size.Height = 64.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        object Label23: TLabel
+          Align = Client
+          StyledSettings = [Family, Style]
+          Size.Width = 64.000000000000000000
+          Size.Height = 64.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 64.000000000000000000
+          TextSettings.FontColor = claDarkviolet
+          TextSettings.HorzAlign = Center
+          Text = '0'
+          TabOrder = 0
+        end
+      end
+      object Panel7: TPanel
+        Position.Y = 128.000000000000000000
+        Size.Width = 64.000000000000000000
+        Size.Height = 64.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        object Label31: TLabel
+          Align = Client
+          StyledSettings = [Family, Style]
+          Size.Width = 64.000000000000000000
+          Size.Height = 64.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 64.000000000000000000
+          TextSettings.HorzAlign = Center
+          Text = '0'
+          TabOrder = 0
+        end
+      end
+      object Panel8: TPanel
+        Position.X = 64.000000000000000000
+        Position.Y = 128.000000000000000000
+        Size.Width = 64.000000000000000000
+        Size.Height = 64.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object Label32: TLabel
+          Align = Client
+          StyledSettings = [Family, Style]
+          Size.Width = 64.000000000000000000
+          Size.Height = 64.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 64.000000000000000000
+          TextSettings.HorzAlign = Center
+          Text = '0'
+          TabOrder = 0
+        end
+      end
+      object Panel9: TPanel
+        Position.X = 128.000000000000000000
+        Position.Y = 128.000000000000000000
+        Size.Width = 64.000000000000000000
+        Size.Height = 64.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object Label33: TLabel
+          Align = Client
+          StyledSettings = [Family, Style]
+          Size.Width = 64.000000000000000000
+          Size.Height = 64.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 64.000000000000000000
+          TextSettings.HorzAlign = Center
+          Text = '0'
+          TabOrder = 0
+        end
+      end
+    end
+    object Label_Move_Left: TLabel
+      StyledSettings = [Family, FontColor]
+      Position.X = 16.000000000000000000
+      Position.Y = 192.000000000000000000
+      Size.Width = 65.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 20.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      Text = '----->'
+      Visible = False
+      TabOrder = 6
+    end
+    object Label_Move_Right: TLabel
+      StyledSettings = [Family, FontColor]
+      Position.X = 320.000000000000000000
+      Position.Y = 192.000000000000000000
+      Size.Width = 65.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 20.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      Text = '<-----'
+      Visible = False
+      TabOrder = 7
+    end
+    object Line_v_1: TLine
+      LineType = Diagonal
+      Position.X = 128.000000000000000000
+      Position.Y = 88.000000000000000000
+      Size.Width = 1.000000000000000000
+      Size.Height = 217.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Color = claRed
+      Stroke.Thickness = 4.000000000000000000
+    end
+    object Line_v_2: TLine
+      LineType = Diagonal
+      Position.X = 192.000000000000000000
+      Position.Y = 88.000000000000000000
+      Size.Width = 1.000000000000000000
+      Size.Height = 217.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Color = claRed
+      Stroke.Thickness = 4.000000000000000000
+    end
+    object Line_v_3: TLine
+      LineType = Diagonal
+      Position.X = 256.000000000000000000
+      Position.Y = 88.000000000000000000
+      Size.Width = 1.000000000000000000
+      Size.Height = 217.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Color = claRed
+      Stroke.Thickness = 4.000000000000000000
+    end
+    object Line_h_1: TLine
+      LineType = Diagonal
+      Position.X = 88.000000000000000000
+      Position.Y = 136.000000000000000000
+      Size.Width = 217.000000000000000000
+      Size.Height = 1.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Color = claRed
+      Stroke.Thickness = 4.000000000000000000
+    end
+    object Line_h_2: TLine
+      LineType = Diagonal
+      Position.X = 88.000000000000000000
+      Position.Y = 200.000000000000000000
+      Size.Width = 217.000000000000000000
+      Size.Height = 1.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Color = claRed
+      Stroke.Thickness = 4.000000000000000000
+    end
+    object Line_h_3: TLine
+      LineType = Diagonal
+      Position.X = 88.000000000000000000
+      Position.Y = 264.000000000000000000
+      Size.Width = 217.000000000000000000
+      Size.Height = 1.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Color = claRed
+      Stroke.Thickness = 4.000000000000000000
+    end
+    object Line_d_11_33: TLine
+      LineType = Diagonal
+      Position.X = 96.000000000000000000
+      Position.Y = 96.000000000000000000
+      Size.Width = 209.000000000000000000
+      Size.Height = 201.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Color = claRed
+      Stroke.Thickness = 4.000000000000000000
+    end
+    object Line_d_31_13: TLine
+      LineType = Diagonal
+      Position.X = 88.000000000000000000
+      Position.Y = 96.000000000000000000
+      RotationAngle = 90.000000000000000000
+      Size.Width = 209.000000000000000000
+      Size.Height = 201.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Color = claRed
+      Stroke.Thickness = 4.000000000000000000
+    end
+    object Button_Genetic: TButton
+      StyledSettings = [Family, FontColor]
+      Position.X = 298.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Genetic'
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      OnClick = Button_GeneticClick
+    end
+    object CheckBox_Stop: TCheckBox
+      Position.X = 304.000000000000000000
+      Position.Y = 168.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 19.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 10
+      Text = 'Stop'
+      OnChange = CheckBox_StopChange
+    end
+    object CheckBox_Pause: TCheckBox
+      Position.X = 304.000000000000000000
+      Position.Y = 144.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 19.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 9
+      Text = 'Pause'
+      OnChange = CheckBox_PauseChange
+    end
+    object Button_BackProp: TButton
+      StyledSettings = [Family, FontColor]
+      Position.X = 298.000000000000000000
+      Position.Y = 72.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'BackProp'
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      OnClick = Button_BackPropClick
+    end
+  end
+  object Panel10: TPanel
+    Align = Client
+    Size.Width = 1111.000000000000000000
+    Size.Height = 638.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object TabControl1: TTabControl
+      Align = Client
+      Size.Width = 1111.000000000000000000
+      Size.Height = 638.000000000000000000
+      Size.PlatformDefault = False
+      TabIndex = 0
+      TabPosition = PlatformDefault
+    end
+  end
+end
