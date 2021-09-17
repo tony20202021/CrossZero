@@ -191,6 +191,7 @@ class NetMutate(NetCheck):
         if self.verbose: print(f"NetMutate: args={args}, kwargs={kwargs}")
 
     def mutate(self, net):
+        # with torch.no_grad():
         self.hidden['linear'].weight = torch.nn.parameter.Parameter(
             net.hidden['linear'].weight + torch.rand(net.hidden['linear'].weight.shape).to(device) - 0.5)
         self.hidden['linear'].bias = torch.nn.parameter.Parameter(
@@ -264,13 +265,13 @@ class PlayerRandom(PlayerCheck):
 
 class PlayerNet(PlayerCheck):
     def __init__(self,
-                 net=NetMutate(),
+                 net_class=NetCurrent,
                  verbose=False,
                  ):
         super().__init__()
 
         self.verbose = verbose
-        self.net = net
+        self.net = net_class()
 
         self.net.to(device)
 
