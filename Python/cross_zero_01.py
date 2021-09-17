@@ -15,8 +15,11 @@ Original file is located at
   * количества скрытых слоев
 """
 
-# from google.colab import drive
-# drive.mount('/content/drive')
+from google.colab import drive
+drive.mount('/content/drive')
+
+import sys
+sys.path.append('/content/drive/MyDrive/CrossZero')
 
 # torch/numpy
 random_seed_fix = True
@@ -69,6 +72,11 @@ os.environ["MKL_NUM_THREADS"] = str(max_threads)
 os.environ["VECLIB_MAXIMUM_THREADS"] = str(max_threads)
 os.environ["NUMEXPR_NUM_THREADS"] = str(max_threads)
 
+"""# глобальные константы"""
+
+from common import FIGURES_TO_VALUES
+from common import TEMPLATES_WIN
+
 """# сеть
 * вход: тензор 1*9, значения (-1, 0, 1), float
 * скрытые слои: 
@@ -77,9 +85,7 @@ os.environ["NUMEXPR_NUM_THREADS"] = str(max_threads)
 * выход: тензор 1*9, float, вероятности хода в соответствующую ячейку
 """
 
-from common import  NetCurrent
-
-"""## тест"""
+from common import NetCurrent
 
 cross_zero_net = NetCurrent(hidden_count=2, verbose=True)
 print(cross_zero_net)
@@ -123,8 +129,6 @@ print(output)
 
 from common import PlayerCurrent
 
-"""## тест"""
-
 player = PlayerCurrent(NetCurrent(hidden_count=2, verbose=True))
 print(player)
 
@@ -139,22 +143,35 @@ input = input.to(device)
 move = player.make_move(input)
 print(move)
 
-from common import Presentation()
+from common import Presentation
 
 
+
+"""# популяция"""
 
 from common import PopulationCurrent
-
-"""## тест"""
 
 population = PopulationCurrent(3)
 print(population)
 
 
 
-from common import Scoring()
+from common import PartyCurrent
 
-"""## тест"""
+party = PartyCurrent(verbose=True)
+print(party)
+
+player_our = PlayerCurrent()
+player_enemy = PlayerRandom()
+
+party_result = party.play_party(player_our, player_enemy)
+print(party_result)
+
+
+
+"""# вычисление результатов"""
+
+from common import Scoring
 
 board = torch.Tensor([
     [0, 0, 0],
@@ -186,24 +203,7 @@ print(Scoring.is_line(board, FIGURES_TO_VALUES['_X_']), Scoring.is_line(board, F
 for template in TEMPLATES_WIN:
     print(Scoring.is_line(template, FIGURES_TO_VALUES['_X_']))
 
-from common import PartyCurrent
-
-"""## тест"""
-
-party = PartyCurrent(verbose=True)
-print(party)
-
-player_our = PlayerCurrent()
-player_enemy = PlayerRandom()
-
-party_result = party.play_party(player_our, player_enemy)
-print(party_result)
-
-
-
 from common import EvaluatePlayerCurrent
-
-"""## тест"""
 
 evaluate_player = EvaluatePlayerCurrent(num_parties=10
                                         # PARTIES['random']
@@ -220,11 +220,7 @@ print(result)
 
 
 
-"""# вычисление результата популяции"""
-
 from common import EvaluatePopulationCurrent
-
-"""## тест"""
 
 evaluate_population = EvaluatePopulationCurrent(num_parties=100)
 print(evaluate_population)
@@ -239,9 +235,9 @@ print([p.score for p in population.players])
 
 
 
-from common import TrainPopulationCurrent
+"""# тренировка"""
 
-"""## тест"""
+from common import TrainPopulationCurrent
 
 train_population = TrainPopulationCurrent(num_parties=10, evaluate_population_class=EvaluatePopulationCurrent, num_epoch=10)
 print(train_population)
