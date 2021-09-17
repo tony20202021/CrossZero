@@ -15,18 +15,18 @@ Original file is located at
   * количества скрытых слоев
 """
 
-from google.colab import drive
-drive.mount('/content/drive')
-
-import sys
-sys.path.append('/content/drive/MyDrive/CrossZero')
+# from google.colab import drive
+# drive.mount('/content/drive')
+#
+# import sys
+# sys.path.append('/content/drive/MyDrive/CrossZero')
 
 # torch/numpy
 random_seed_fix = True
 
 """# импорт"""
 
-!pip install -q pytorch-lightning
+# !pip install -q pytorch-lightning
 
 # опция -q позволяет значительно уменьшить вывод при установке пакета
 

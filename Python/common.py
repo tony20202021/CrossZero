@@ -260,22 +260,7 @@ class PlayerRandom(PlayerCheck):
 
         return result
 
-
-player = PlayerRandom()
-
-input = torch.Tensor([
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-]).type(torch.float).contiguous().view(-1)
-input.requires_grad = False
-input = input.to(device)
-
-output = player.make_move(input)
-print(output)
-
 """### расчет через сеть"""
-
 
 class PlayerNet(PlayerCheck):
     def __init__(self,
