@@ -583,6 +583,7 @@ class EvaluatePopulationBase(EvaluatePopulationCheck):
     def __init__(self, num_parties=PARTIES['random']):
         super().__init__()
 
+        self.num_parties = num_parties
         self.evaluate_player = EvaluatePlayerCurrent(num_parties=num_parties)
 
     def evaluate(self, population):
@@ -631,6 +632,7 @@ class TrainPopulationBase(TrainPopulationCheck):
                  num_epoch=1000):
         super().__init__(num_parties, evaluate_population_class)
 
+        self.num_parties = num_parties
         self.evaluate_population = evaluate_population_class(num_parties=num_parties)
         self.num_epoch = num_epoch
 
