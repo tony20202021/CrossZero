@@ -596,7 +596,7 @@ class EvaluatePopulationCheck(IEvaluatePopulation):
 
 class EvaluatePopulationBase(EvaluatePopulationCheck):
     def __init__(self, num_parties=PARTIES['random']):
-        super().evaluate(population)
+        super().__init__()
 
         self.evaluate_player = EvaluatePlayerCurrent(num_parties=num_parties)
 
