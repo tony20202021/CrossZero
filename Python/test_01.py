@@ -10,22 +10,22 @@ from common import EvaluatePopulationCurrent
 from common import TrainPopulationCurrent
 
 
-train_population = TrainPopulationCurrent(num_parties=10, evaluate_population_class=EvaluatePopulationCurrent, num_epoch=10)
+train_population = TrainPopulationCurrent(num_parties=100, evaluate_population_class=EvaluatePopulationCurrent, num_epoch=2000)
 # print(train_population)
 
-population = PopulationCurrent(10)
-print([p.net.hidden['linear'].weight for p in population.players])
+population = PopulationCurrent(num_players=100, hidden_count=30)
+# print([p.net.hidden['linear'].weight for p in population.players])
 
 # print(population)
 
 print(train_population.train(population))
 
-print([p.score for p in population.players])
+# print([p.score for p in population.players])
 
-print([p.net.hidden['linear'].weight for p in population.players])
+# print([p.net.hidden['linear'].weight for p in population.players])
 
-population.mutate()
+# population.mutate()
 
-print([p.net.hidden['linear'].weight for p in population.players])
-
-print([p.score for p in population.players])
+# print([p.net.hidden['linear'].weight for p in population.players])
+#
+# print([p.score for p in population.players])

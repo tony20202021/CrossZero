@@ -36,13 +36,18 @@ VALUES_TO_FIGURES = {
 # scores
 SCORES_WEIGHTS = {
     'valid_move': torch.Tensor([1]).to(device).type(torch.float),
-    'win': torch.Tensor([10]).to(device).type(torch.float),
+    # 'win': torch.Tensor([10]).to(device).type(torch.float),
+    'win': torch.Tensor([0]).to(device).type(torch.float),
 }
 
 # parties
 PARTIES = {
     'random': 10,
 }
+
+MAX_MOVES = 5
+
+SCORE_DIGITS = 2
 
 # templates
 TEMPLATES_WIN = torch.Tensor([
@@ -190,16 +195,37 @@ class NetMutate(NetCheck):
 
         if self.verbose: print(f"NetMutate: args={args}, kwargs={kwargs}")
 
-    def mutate(self, net):
-        # with torch.no_grad():
-        self.hidden['linear'].weight = torch.nn.parameter.Parameter(
-            net.hidden['linear'].weight + torch.rand(net.hidden['linear'].weight.shape).to(device) - 0.5)
-        self.hidden['linear'].bias = torch.nn.parameter.Parameter(
-            net.hidden['linear'].bias + torch.rand(net.hidden['linear'].bias.shape).to(device) - 0.5)
-        self.output['linear'].weight = torch.nn.parameter.Parameter(
-            net.output['linear'].weight + torch.rand(net.output['linear'].weight.shape).to(device) - 0.5)
-        self.output['linear'].bias = torch.nn.parameter.Parameter(
-            net.output['linear'].bias + torch.rand(net.output['linear'].bias.shape).to(device) - 0.5)
+    def _mutate_parameter(self, parameter, probability=0.1, max_volume=0.1):
+        mask = torch.bernoulli(torch.full(parameter.shape, probability)).int()
+        volume = max_volume * max(0.000001, min(1, parameter.abs().max()))
+        return torch.nn.parameter.Parameter(parameter + mask * volume * (torch.rand(parameter.shape).to(device) - 0.5))
+
+    def mutate(self, net, probability=0.1, max_volume=0.1):
+        self.hidden['linear'].weight = self._mutate_parameter(net.hidden['linear'].weight, probability, max_volume)
+        self.hidden['linear'].bias = self._mutate_parameter(net.hidden['linear'].bias, probability, max_volume)
+        self.output['linear'].weight = self._mutate_parameter(net.output['linear'].weight, probability, max_volume)
+        self.output['linear'].bias = self._mutate_parameter(net.output['linear'].bias, probability, max_volume)
+
+    def _reproduce_parameter(self, parameter_1, parameter_2, probability_1=0.5):
+        mask_1 = torch.bernoulli(torch.full(parameter_1.shape, probability_1)).int()
+        mask_2 = torch.ones(parameter_1.shape).int() - mask_1
+        return torch.nn.parameter.Parameter(mask_1 * parameter_1 + mask_2 * parameter_2)
+
+    def reproduce(self, net_1, net_2, probability_1=0.5):
+        self.hidden['linear'].weight = self._reproduce_parameter(net_1.hidden['linear'].weight, net_2.hidden['linear'].weight, probability_1)
+        self.hidden['linear'].bias = self._reproduce_parameter(net_1.hidden['linear'].bias, net_2.hidden['linear'].bias, probability_1)
+        self.output['linear'].weight = self._reproduce_parameter(net_1.output['linear'].weight, net_2.output['linear'].weight, probability_1)
+        self.output['linear'].bias = self._reproduce_parameter(net_1.output['linear'].bias, net_2.output['linear'].bias, probability_1)
+
+    def _random_parameter(self, parameter):
+        return torch.nn.parameter.Parameter(torch.rand(parameter.shape).to(device) - 0.5)
+
+    def random(self):
+        self.hidden['linear'].weight = self._random_parameter(self.hidden['linear'].weight)
+        self.hidden['linear'].bias = self._random_parameter(self.hidden['linear'].bias)
+        self.output['linear'].weight = self._random_parameter(self.output['linear'].weight)
+        self.output['linear'].bias = self._random_parameter(self.output['linear'].bias)
+
 
     def add_neuron(self, input):
         raise NotImplemented(f"CrossZeroNet_01.add_neuron")
@@ -266,12 +292,13 @@ class PlayerRandom(PlayerCheck):
 class PlayerNet(PlayerCheck):
     def __init__(self,
                  net_class=NetCurrent,
+                 hidden_count=2,
                  verbose=False,
                  ):
         super().__init__()
 
         self.verbose = verbose
-        self.net = net_class()
+        self.net = net_class(hidden_count=hidden_count)
 
         self.net.to(device)
 
@@ -294,8 +321,14 @@ class PlayerNet(PlayerCheck):
 
 
 class PlayerMutate(PlayerNet):
-    def mutate(self, player):
-        self.net.mutate(player.net)
+    def mutate(self, player, probability=0.1, max_volume=0.1):
+        self.net.mutate(player.net, probability, max_volume)
+
+    def reproduce(self, player_1, player_2, probability_1=0.5):
+        self.net.reproduce(player_1.net, player_2.net, probability_1)
+
+    def random(self):
+        self.net.random()
 
 
 class PlayerCurrent(PlayerMutate):
@@ -349,17 +382,20 @@ class PopulationCheck(IPopulation):
 
 
 class PopulationBase(PopulationCheck):
-    def __init__(self, num_players, player_class=PlayerCurrent):
+    def __init__(self, num_players, player_class=PlayerCurrent, hidden_count=2):
         super().__init__(num_players, player_class)
 
-        self.players = np.array([player_class() for index_player in range(num_players)])
+        self.players = np.array([player_class(hidden_count=hidden_count) for index_player in range(num_players)])
 
 
 class PopulationMutate(PopulationBase):
-    def __init__(self, num_players, player_class=PlayerCurrent):
-        super().__init__(num_players, player_class)
+    def __init__(self, num_players, player_class=PlayerCurrent, hidden_count=2):
+        super().__init__(num_players, player_class, hidden_count)
 
         self.len_copy = int(0.1 * len(self.players))
+        self.len_mutate = int(0.5 * len(self.players))
+        self.len_reproduce = int(0.3 * len(self.players))
+        self.len_random = int(0.1 * len(self.players))
 
     def sort_players(self):
         # self.players = sorted(self.players, key=lambda x: x.score, reverse=True)
@@ -369,10 +405,109 @@ class PopulationMutate(PopulationBase):
         # print(torch.cat([p.score for p in self.players]).argsort(descending=True).tolist())
         self.players = self.players[torch.cat([p.score for p in self.players]).argsort(descending=True).tolist()]
 
-    def mutate(self):
+    def generate_mutate(self,
+                        index_begin_destination, index_end_destination,
+                        index_begin_source, index_end_source,
+                        probability=0.1, max_volume=0.1):
+        index_source = index_begin_source
+        for index_destination in range(index_begin_destination, index_end_destination):
+            self.players[index_destination].mutate(self.players[index_source], probability, max_volume)
+            index_source = (index_source + 1) % (index_end_source - index_begin_source)
+
+    def generate_mutate_all(self,
+                            index_begin_destination, index_end_destination,
+                            index_begin_source, index_end_source,
+                            ):
+        parameters = [
+            {'probability': 0.01, 'max_volume': 0.01},
+            {'probability': 0.1, 'max_volume': 0.1},
+            {'probability': 0.1, 'max_volume': 0.9},
+            {'probability': 0.9, 'max_volume': 0.1},
+            {'probability': 0.9, 'max_volume': 0.9},
+        ]
+        len_batch = (index_end_destination - index_begin_destination) // len(parameters)
+        index_begin_destination_batch = None
+        index_end_destination_batch = None
+        for index, parameter in enumerate(parameters):
+            if index_begin_destination_batch is None:
+                index_begin_destination_batch = index_begin_destination
+            else:
+                index_begin_destination_batch = index_end_destination_batch
+            index_end_destination_batch = min(index_end_destination, index_begin_destination_batch + len_batch)
+            self.generate_mutate(index_begin_destination_batch, index_end_destination_batch,
+                                 index_begin_source, index_end_source,
+                                 parameter['probability'], parameter['max_volume'])
+
+        if (index_end_destination_batch < index_end_destination):
+            self.generate_mutate(index_end_destination_batch, index_end_destination,
+                                 index_begin_source, index_end_source,
+                                 parameters[0]['probability'], parameters[0]['max_volume'])
+
+    def generate_reproduce(self,
+                           index_begin_destination, index_end_destination,
+                           index_begin_source, index_end_source,
+                           probability_1=0.5):
+        index_destination = index_begin_destination
+        while (index_destination < index_end_destination):
+            index_source_1 = np.random.randint(index_end_source - index_begin_source)
+            index_source_2 = np.random.randint(index_end_source - index_begin_source)
+            if (index_source_1 != index_source_2):
+                self.players[index_destination].reproduce(self.players[index_source_1], self.players[index_source_2], probability_1)
+                index_destination += 1
+
+    def generate_reproduce_all(self,
+                        index_begin_destination, index_end_destination,
+                        index_begin_source, index_end_source):
+        parameters = [
+            {'probability': 0.1},
+            {'probability': 0.5},
+            {'probability': 0.9},
+        ]
+        len_batch = (index_end_destination - index_begin_destination) // len(parameters)
+        index_begin_destination_batch = None
+        index_end_destination_batch = None
+        for index, parameter in enumerate(parameters):
+            if index_begin_destination_batch is None:
+                index_begin_destination_batch = index_begin_destination
+            else:
+                index_begin_destination_batch = index_end_destination_batch
+            index_end_destination_batch = min(index_end_destination, index_begin_destination_batch + len_batch)
+            self.generate_reproduce(index_begin_destination_batch, index_end_destination_batch,
+                                    index_begin_source, index_end_source,
+                                    parameter['probability'])
+
+        if (index_end_destination_batch < index_end_destination):
+            self.generate_reproduce(index_end_destination_batch, index_end_destination,
+                                    index_begin_source, index_end_source,
+                                    parameters[0]['probability'])
+
+
+    def generate(self):
+        # 0..len_copy - ничего не меняем
+
+        # len_mutate
+        index_begin_source = 0
+        index_end_source = self.len_copy
+        index_begin_destination = self.len_copy
+        index_end_destination = min(self.len_copy + self.len_mutate, len(self.players))
+        self.generate_mutate_all(index_begin_destination, index_end_destination,
+                             index_begin_source, index_end_source)
+
+        # len_reproduce
+        index_begin_source = 0
+        index_end_source = self.len_copy
+        index_begin_destination = self.len_copy + self.len_mutate
+        index_end_destination = min(self.len_copy + self.len_mutate + self.len_reproduce, len(self.players))
+        self.generate_reproduce_all(index_begin_destination, index_end_destination,
+                                index_begin_source, index_end_source)
+
+        # len_random
+        # все остальное до конца
         index_source = 0
-        for index_destination in range(self.len_copy, len(self.players)):
-            self.players[index_destination].mutate(self.players[index_source])
+        index_begin = self.len_copy + self.len_mutate + self.len_reproduce
+        index_end = len(self.players)
+        for index_destination in range(index_begin, index_end):
+            self.players[index_destination].random()
             index_source = (index_source + 1) % self.len_copy
 
 
@@ -536,7 +671,7 @@ class EvaluatePlayerRandom(EvaluatePlayerCheck):
 
         # print(f"evaluate_random.begin")
         result = sum([self.calc_score(self.party.play_party(player, self.player_enemy)[0]) for index_party in
-                      range(num_parties_random)])
+                      range(num_parties_random)]) / num_parties_random
         # print(f"evaluate_random.end")
 
         player.score = result
@@ -647,9 +782,10 @@ class TrainPopulationBase(TrainPopulationCheck):
             # print(f"evaluate={[p.score.item() for p in population.players]}")
 
             population.sort_players()
-            print(f"sort_players={[p.score.item() for p in population.players]}")
+            top_10 = [f"{p.score.item():.2f} (len={len(p.net.hidden['linear'].weight)}, max={p.net.hidden['linear'].weight.abs().max():.2f})" for p in population.players[:10]]
+            print(f"top 10 = {top_10}")
 
-            population.mutate()
+            population.generate()
             # print(f"mutate={[p.score.item() for p in population.players]}")
 
         return population
