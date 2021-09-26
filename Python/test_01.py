@@ -13,7 +13,7 @@ from common import TrainPopulationCurrent
 train_population = TrainPopulationCurrent(num_parties=100, evaluate_population_class=EvaluatePopulationCurrent, num_epoch=2000)
 # print(train_population)
 
-population = PopulationCurrent(num_players=100, hidden_count=30)
+population = PopulationCurrent(num_players=10, hidden_count=30)
 # print([p.net.hidden['linear'].weight for p in population.players])
 
 # print(population)
