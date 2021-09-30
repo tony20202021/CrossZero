@@ -74,8 +74,8 @@ os.environ["NUMEXPR_NUM_THREADS"] = str(max_threads)
 
 """# глобальные константы"""
 
-from common import FIGURES_TO_VALUES
-from common import TEMPLATES_WIN
+from Common import FIGURES_TO_VALUES
+from Common import TEMPLATES_WIN
 
 """# сеть
 * вход: тензор 1*9, значения (-1, 0, 1), float
@@ -85,7 +85,7 @@ from common import TEMPLATES_WIN
 * выход: тензор 1*9, float, вероятности хода в соответствующую ячейку
 """
 
-from common import NetCurrent
+from Common import NetCurrent
 
 cross_zero_net = NetCurrent(hidden_count=2, verbose=True)
 print(cross_zero_net)
@@ -112,7 +112,7 @@ print(output)
 * выход: одно число, int - индекс ячейки в вытянутом тензоре 1*9
 """
 
-from common import PlayerRandom
+from Common import PlayerRandom
 
 player = PlayerRandom()
 
@@ -127,7 +127,7 @@ input = input.to(device)
 output = player.make_move(input)
 print(output)
 
-from common import PlayerCurrent
+from Common import PlayerCurrent
 
 player = PlayerCurrent(NetCurrent(hidden_count=2, verbose=True))
 print(player)
@@ -143,20 +143,20 @@ input = input.to(device)
 move = player.make_move(input)
 print(move)
 
-from common import Presentation
+from Common import Presentation
 
 
 
 """# популяция"""
 
-from common import PopulationCurrent
+from Common import PopulationCurrent
 
 population = PopulationCurrent(3)
 print(population)
 
 
 
-from common import PartyCurrent
+from Common import PartyCurrent
 
 party = PartyCurrent(verbose=True)
 print(party)
@@ -171,7 +171,7 @@ print(party_result)
 
 """# вычисление результатов"""
 
-from common import Scoring
+from Common import Scoring
 
 board = torch.Tensor([
     [0, 0, 0],
@@ -203,7 +203,7 @@ print(Scoring.is_line(board, FIGURES_TO_VALUES['_X_']), Scoring.is_line(board, F
 for template in TEMPLATES_WIN:
     print(Scoring.is_line(template, FIGURES_TO_VALUES['_X_']))
 
-from common import EvaluatePlayerCurrent
+from Common import EvaluatePlayerCurrent
 
 evaluate_player = EvaluatePlayerCurrent(num_parties=10
                                         # PARTIES['random']
@@ -220,7 +220,7 @@ print(result)
 
 
 
-from common import EvaluatePopulationCurrent
+from Common import EvaluatePopulationCurrent
 
 evaluate_population = EvaluatePopulationCurrent(num_parties=100)
 print(evaluate_population)
@@ -237,7 +237,7 @@ print([p.score for p in population.players])
 
 """# тренировка"""
 
-from common import TrainPopulationCurrent
+from Common import TrainPopulationCurrent
 
 train_population = TrainPopulationCurrent(num_parties=10, evaluate_population_class=EvaluatePopulationCurrent, num_epoch=10)
 print(train_population)
