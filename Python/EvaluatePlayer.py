@@ -1,23 +1,12 @@
 # -*- coding: utf-8 -*-
-# import matplotlib.pyplot as plt
 
-import numpy as np
-import random
-import collections
-import typing
-
-import torch
-
-device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+"""
+# вычисление результата одного игрока
+"""
 
 from Common import PARTIES
-from Common import PlayerRandomNotCenter
-from Common import PartyCurrent
-
-"""# вычисление результата одного игрока
-
-## классы
-"""
+from PlayerRandom import PlayerRandom
+from Party import PartyCurrent
 
 
 class IEvaluatePlayer():
@@ -48,7 +37,7 @@ class EvaluatePlayerRandom(EvaluatePlayerCheck):
     def __init__(self,
                  *args,
                  # player_enemy_class=PlayerRandom,
-                 player_enemy_class=PlayerRandomNotCenter,
+                 player_enemy_class=PlayerRandom,
                  party_class=PartyCurrent,
                  **kwargs,
                  ):

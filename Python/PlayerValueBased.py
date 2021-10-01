@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
-# import matplotlib.pyplot as plt
+
+"""
+Игрок на основе Q-learning
+"""
 
 import numpy as np
-import random
-import collections
-import typing
 
 import torch
-
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
-from Common import PlayerCheck
+from PlayerBase import PlayerCheck
 from Common import Presentation
 from Common import SCORES_WEIGHTS
+from Common import FIGURES_TO_VALUES
 
 class PlayerValueBased(PlayerCheck):
     def __init__(self,
@@ -189,8 +189,8 @@ class PlayerValueBased(PlayerCheck):
                         'next_states_count': 0,
                         'next_states': {},
                     }
-                    for index in range(len(board)) # if board[index].item() == 0
-                }, # FIGURES_TO_VALUES['___']
+                    for index in range(len(board)) if board[index].item() == FIGURES_TO_VALUES['___']
+                },
                 'board': board,
             }
             all_moves = list(self.data[key]['all_moves'].keys())

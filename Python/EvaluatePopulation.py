@@ -1,22 +1,11 @@
 # -*- coding: utf-8 -*-
-# import matplotlib.pyplot as plt
 
-import numpy as np
-import random
-import collections
-import typing
-
-import torch
-
-device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+"""
+вычисление результата популяции
+"""
 
 from Common import PARTIES
 from EvaluatePlayer import EvaluatePlayerCurrent
-
-"""# вычисление результата популяции
-
-## классы
-"""
 
 
 class IEvaluatePopulation():

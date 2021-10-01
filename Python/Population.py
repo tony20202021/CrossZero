@@ -1,22 +1,12 @@
 # -*- coding: utf-8 -*-
-# import matplotlib.pyplot as plt
 
-import numpy as np
-import random
-import collections
-import typing
-
-import torch
-
-device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-
-from PlayerValueBased import PlayerCurrent
-
-"""# популяция
-
-## классы
+"""
+популяция
 """
 
+import numpy as np
+
+from PlayerValueBased import PlayerCurrent
 
 class IPopulation():
     def __init__(self,
@@ -55,7 +45,7 @@ class PopulationPlayers(PopulationCheck):
 
 class PopulationSort(PopulationPlayers):
     def sort_players(self):
-        self.players = self.players[torch.cat([torch.Tensor([p.score['win']]) for p in self.players]).argsort(descending=True).tolist()]
+        self.players = self.players[np.concatenate([np.array([p.score['win']]) for p in self.players]).argsort()[::-1]]
 
 
 class PopulationUpdate(PopulationSort):

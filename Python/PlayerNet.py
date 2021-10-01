@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-# import matplotlib.pyplot as plt
 
-import numpy as np
-import random
+"""
+Игрок на основе нейросети
+"""
+
 import collections
-import typing
 
 import torch
-
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
-from Common import PlayerCheck
+from Common import Y_LEN
+from Common import X_LEN
+from PlayerBase import PlayerCheck
 
 
 # сеть
