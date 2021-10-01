@@ -9,7 +9,9 @@ from Common import FIGURES_TO_VALUES
 from PlayerBase import PlayerCheck
 
 
-"""### рандомные ходы в свободные ячейки"""
+"""
+рандомные ходы в любые свободные ячейки
+"""
 class PlayerRandom(PlayerCheck):
     def make_move(self, input):
         super().make_move(input)
@@ -25,7 +27,10 @@ class PlayerRandom(PlayerCheck):
         return result
 
 
-"""### рандомные ходы в свободные ячейки, кроме центра"""
+"""
+рандомные ходы в свободные ячейки, кроме центра
+такого игрока всегда можно обыграть, если первый ход наш
+"""
 class PlayerRandomNotCenter(PlayerCheck):
     _CENTER = 4
     def make_move(self, board):

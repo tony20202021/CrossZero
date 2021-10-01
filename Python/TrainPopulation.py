@@ -43,7 +43,7 @@ class TrainPopulationBase(TrainPopulationCheck):
         super().train(population)
 
         for index_epoch in range(self.num_epoch):
-            print(f"index_epoch={index_epoch}")
+            print(f"epoch:{index_epoch}/{self.num_epoch}, players:{len(population.players)}, parties:{self.num_parties}")
 
             self.evaluate_population.evaluate(population, train=True)
 

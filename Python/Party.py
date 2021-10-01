@@ -8,9 +8,12 @@ import numpy as np
 
 from Common import FIGURES_TO_VALUES
 from Common import SCORES_WEIGHTS
+from Common import Y_LEN
+from Common import X_LEN
 from Common import Presentation
 from Common import Scoring
 from PlayerBase import IPlayer
+
 
 class IParty():
     def play_party(self, player_our, player_enemy):
@@ -40,7 +43,7 @@ class PartyFull(PartyBase):
     def play_party(self, player_0, player_1):
         super().play_party(player_0, player_1)
 
-        # 2329 + 196 = 4291
+        # 2329 + 1962 = 4291
         index_player = np.random.randint(0, 1 + 1)
         # index_player = 1
 

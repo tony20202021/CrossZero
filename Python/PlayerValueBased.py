@@ -6,13 +6,13 @@
 
 import numpy as np
 
-import torch
-device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-
 from PlayerBase import PlayerCheck
 from Common import Presentation
 from Common import SCORES_WEIGHTS
 from Common import FIGURES_TO_VALUES
+
+TOTAL_COMBINATIONS = 4291
+LEARN_INVALID_MOVES = False
 
 class PlayerValueBased(PlayerCheck):
     def __init__(self,
@@ -34,7 +34,7 @@ class PlayerValueBased(PlayerCheck):
         return tuple(board)
 
     def get_info(self):
-        return f"len={len(self.data)}, {self.data_is_full_known}"
+        return f"known={len(self.data)}/{TOTAL_COMBINATIONS}, is_full_known:{self.data_is_full_known}"
 
     def set_train(self, train):
         self.train = train
@@ -46,7 +46,7 @@ class PlayerValueBased(PlayerCheck):
                 'is_changed': False,
                 'is_full_known': False,
             }
-        # TODO
+
         if (self.data[key]['is_full_known']) and ('all_moves' not in self.data[key]):
             return {
                 'value': self.data[key]['value'],
@@ -157,9 +157,6 @@ class PlayerValueBased(PlayerCheck):
 
             self.data[previous_key]['all_moves'][self.previous_move]['next_states'][key]['count'] += 1
             self.data[previous_key]['all_moves'][self.previous_move]['next_states'][key]['last_score'] = self.previous_move_score
-            # self.data[previous_key]['all_moves'][self.previous_move]['next_states'][key]['scores'].append(self.previous_move_score)
-            # self.data[previous_key]['all_moves'][self.previous_move]['next_states'][key]['mean'] = \
-            #     np.mean(self.data[previous_key]['all_moves'][self.previous_move]['next_states'][key]['scores'])
             self.data[previous_key]['all_moves'][self.previous_move]['next_states'][key]['EMA'] = \
                 (1-alpha)*(self.data[previous_key]['all_moves'][self.previous_move]['next_states'][key]['EMA']) + \
                 (alpha) * self.previous_move_score
@@ -189,7 +186,7 @@ class PlayerValueBased(PlayerCheck):
                         'next_states_count': 0,
                         'next_states': {},
                     }
-                    for index in range(len(board)) if board[index].item() == FIGURES_TO_VALUES['___']
+                    for index in range(len(board)) if ((not LEARN_INVALID_MOVES) or (board[index].item() == FIGURES_TO_VALUES['___']))
                 },
                 'board': board,
             }
