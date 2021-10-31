@@ -52,9 +52,12 @@ class TrainPopulationBase(TrainPopulationCheck):
 
             population.sort_players()
             top_10 = [f"win:{p.score['win']:.3f}, lose:{p.score['lose']:.3f}, draw:{p.score['draw']:.3f}, invalid:{p.score['invalid']:.3f}  ({p.get_info()})" for p in population.players[:10]]
+#            top_10 = [f"{p.score.item():.2f} (len={len(p.net.hidden['linear'].weight)}, max={p.net.hidden['linear'].weight.abs().max():.2f})" for p in population.players[:10]]
             print(f"top 10 = {top_10}")
 
             population.update()
+#            population.mutate()
+#            population.generate()            
             # print(f"mutate={[p.score.item() for p in population.players]}")
 
         return population
